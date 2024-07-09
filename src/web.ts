@@ -3,8 +3,16 @@ import { WebPlugin } from '@capacitor/core';
 import type { LidarPlugin } from './definitions';
 
 export class LidarWeb extends WebPlugin implements LidarPlugin {
-  async echo(options: { value: string }): Promise<{ value: string }> {
-    console.log('ECHO', options);
-    return options;
+  isLiDARAvailable(): Promise<{ available: boolean; }> {
+    throw new Error('Method not implemented.');
+  }
+  startScan(): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
+  stopScan(): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
+  exportResults(): Promise<void> {
+    throw new Error('Method not implemented.');
   }
 }

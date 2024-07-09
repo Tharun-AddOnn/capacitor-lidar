@@ -1,3 +1,6 @@
 export interface LidarPlugin {
-  echo(options: { value: string }): Promise<{ value: string }>;
+  isLiDARAvailable(): Promise<{ available: boolean }>;
+  startScan():Promise<void>;
+  stopScan():Promise<void>;
+  exportResults():Promise<void>;
 }
