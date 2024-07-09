@@ -7,22 +7,22 @@ let package = Package(
     products: [
         .library(
             name: "CapacitorLidar",
-            targets: ["LidarPlugin"])
+            targets: ["Lidar"])
     ],
     dependencies: [
         .package(url: "https://github.com/ionic-team/capacitor-swift-pm.git", branch: "main")
     ],
     targets: [
         .target(
-            name: "LidarPlugin",
+            name: "Lidar",
             dependencies: [
                 .product(name: "Capacitor", package: "capacitor-swift-pm"),
                 .product(name: "Cordova", package: "capacitor-swift-pm")
             ],
-            path: "ios/Sources/LidarPlugin"),
+            path: "ios/Sources/Lidar"),
         .testTarget(
-            name: "LidarPluginTests",
-            dependencies: ["LidarPlugin"],
+            name: "LidarTests",
+            dependencies: ["Lidar"],
             path: "ios/Tests/LidarPluginTests")
     ]
 )

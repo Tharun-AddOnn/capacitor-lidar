@@ -1,9 +1,11 @@
+import Capacitor
 import UIKit
 import RoomPlan
 
 @available(iOS 16.0, *)
 class RoomCaptureViewController: UIViewController, RoomCaptureViewDelegate, RoomCaptureSessionDelegate {
     weak var scanPluginDelegate: ScanDelegate?
+    var call: CAPPluginCall?
     
     @IBOutlet var exportButton: UIButton?
     @IBOutlet var doneButton: UIBarButtonItem?
@@ -55,10 +57,12 @@ class RoomCaptureViewController: UIViewController, RoomCaptureViewDelegate, Room
         setCompleteNavBar()
     }
     
+    // Decide to post-process and show the final results.
     func captureView(shouldPresent roomDataForProcessing: CapturedRoomData, error: Error?) -> Bool {
         return true
     }
     
+    // Access the final post-processed results.
     func captureView(didPresent processedResult: CapturedRoom, error: Error?) {
         finalResults = processedResult
         self.exportButton?.isEnabled = true
@@ -67,17 +71,37 @@ class RoomCaptureViewController: UIViewController, RoomCaptureViewDelegate, Room
     
     @IBAction func doneScanning(_ sender: UIBarButtonItem) {
         if isScanning { stopSession() } else {
-            dismiss(animated: true)
+            navigationController?.dismiss(animated: true)
         }
         self.exportButton?.isEnabled = false
         self.activityIndicator?.startAnimating()
     }
 
     @IBAction func cancelScanning(_ sender: UIBarButtonItem) {
-        dismiss(animated: true)
+        navigationController?.dismiss(animated: true)
         scanPluginDelegate?.onDelegateCall(self, didFinishWithResult: "No scan data")
     }
     
+    // Export the USDZ output by specifying the `.parametric` export option.
+    // Alternatively, `.mesh` exports a nonparametric file and `.all`
+    // exports both in a single USDZ.
+//    @IBAction func exportResults() {
+//        let destinationFolderURL = FileManager.default.temporaryDirectory.appending(path: "Export")
+//        let destinationURL = destinationFolderURL.appending(path: "Room.usdz")
+//        let capturedRoomURL = destinationFolderURL.appending(path: "Room.json")
+//        do {
+//            try FileManager.default.createDirectory(at: destinationFolderURL, withIntermediateDirectories: true)
+//            let jsonEncoder = JSONEncoder()
+//            let jsonData = try jsonEncoder.encode(finalResults)
+//            try jsonData.write(to: capturedRoomURL)
+//            try finalResults?.export(to: destinationURL, exportOptions: .parametric)
+//            let jsonDataAsString = String(data: jsonData,encoding:.utf8)
+//            scanPluginDelegate?.onDelegateCall(self, didFinishWithResult: jsonDataAsString!)
+//        } catch {
+//            print("Error = \(error)")
+//            scanPluginDelegate?.onDelegateCall(self, didFinishWithResult: "Error = \(error)")
+//        }
+//    }
     @IBAction func exportResults(_ sender: UIButton) {
         let destinationFolderURL = FileManager.default.temporaryDirectory.appending(path: "Export")
         let destinationURL = destinationFolderURL.appending(path: "Room.usdz")
@@ -119,8 +143,4 @@ class RoomCaptureViewController: UIViewController, RoomCaptureViewDelegate, Room
             self.exportButton?.alpha = 1.0
         }
     }
-}
-
-protocol ScanDelegate: AnyObject {
-    func onDelegateCall(_ controller: RoomCaptureViewController, didFinishWithResult result: String)
 }
