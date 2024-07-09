@@ -36,30 +36,6 @@ public class LidarPlugin: CAPPlugin, ScanDelegate {
         }
     }
 
-    @objc func stopScan(_ call: CAPPluginCall) {
-        if let viewController = self.roomCaptureViewController {
-            DispatchQueue.main.async {
-                viewController.stopSession()
-                viewController.dismiss(animated: true, completion: {
-                    call.resolve()
-                })
-            }
-        } else {
-            call.reject("No active scan session to stop")
-        }
-    }
-
-    @objc func exportResults(_ call: CAPPluginCall) {
-        if let viewController = self.roomCaptureViewController {
-            DispatchQueue.main.async {
-                viewController.exportResults()
-                call.resolve()
-            }
-        } else {
-            call.reject("No scan results available to export")
-        }
-    }
-
     func onDelegateCall(_ controller: RoomCaptureViewController, didFinishWithResult result: String) {
         if let callbackId = scanCallbackId {
             notifyListeners("onScanResult", data: [
