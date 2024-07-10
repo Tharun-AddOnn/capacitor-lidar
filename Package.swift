@@ -2,27 +2,27 @@
 import PackageDescription
 
 let package = Package(
-    name: "CapacitorLidar",
+    name: "Lidar",
     platforms: [.iOS(.v13)],
     products: [
         .library(
-            name: "CapacitorLidar",
-            targets: ["Lidar"])
+            name: "Lidar",
+            targets: ["LidarPlugin"])
     ],
     dependencies: [
         .package(url: "https://github.com/ionic-team/capacitor-swift-pm.git", branch: "main")
     ],
     targets: [
         .target(
-            name: "Lidar",
+            name: "LidarPlugin",
             dependencies: [
                 .product(name: "Capacitor", package: "capacitor-swift-pm"),
                 .product(name: "Cordova", package: "capacitor-swift-pm")
             ],
-            path: "ios/Sources/Lidar"),
+            path: "ios/Sources/LidarPlugin"),
         .testTarget(
-            name: "LidarTests",
-            dependencies: ["Lidar"],
+            name: "LidarPluginTests",
+            dependencies: ["LidarPlugin"],
             path: "ios/Tests/LidarPluginTests")
     ]
 )
