@@ -9,10 +9,4 @@ export class LidarWeb extends WebPlugin implements LidarPlugin {
   startScan(): Promise<void> {
     throw new Error('Method not implemented.');
   }
-  stopScan(): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
-  exportResults(): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
 }
