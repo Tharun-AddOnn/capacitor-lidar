@@ -12,11 +12,12 @@ public class LidarPlugin extends Plugin {
     private Lidar implementation = new Lidar();
 
     @PluginMethod
-    public void echo(PluginCall call) {
-        String value = call.getString("value");
+    public boolean isLiDARAvailable(PluginCall call) {
+        call.reject("Not available for android");
+    }
 
-        JSObject ret = new JSObject();
-        ret.put("value", implementation.echo(value));
-        call.resolve(ret);
+    @PluginMethod
+    public void startScan(PluginCall call){
+        call.reject("Not available for android");
     }
 }
