@@ -14,6 +14,7 @@ public class LidarPlugin extends Plugin {
     @PluginMethod
     public boolean isLiDARAvailable(PluginCall call) {
         call.reject("Not available for android");
+        return false;
     }
 
     @PluginMethod

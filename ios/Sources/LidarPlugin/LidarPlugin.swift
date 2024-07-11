@@ -14,8 +14,8 @@ public class LidarPlugin: CAPPlugin, ScanDelegate {
     public let identifier = "LidarPlugin"
     public let jsName = "Lidar"
     public let pluginMethods: [CAPPluginMethod] = [
-        CAPPluginMethod(name: "isLiDARAvailable", returnType: CAPPluginReturnPromise)
-         CAPPluginMethod(name: "startScan", returnType: CAPPluginReturnPromise)
+        CAPPluginMethod(name: "isLiDARAvailable", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "startScan", returnType: CAPPluginReturnPromise)
     ]
     private let implementation = Lidar()
 
@@ -25,7 +25,7 @@ public class LidarPlugin: CAPPlugin, ScanDelegate {
     public override func load() {
         self.scanCallbackId = nil
     }
-
+  
     @objc func isLiDARAvailable(_ call: CAPPluginCall) {
         let available = ARWorldTrackingConfiguration.supportsSceneReconstruction(.mesh)
         call.resolve([
