@@ -10,7 +10,7 @@ import UIKit
  * here: https://capacitorjs.com/docs/plugins/ios
  */
 @objc(LidarPlugin)
-public class LidarPlugin: CAPPlugin, ScanDelegate {
+public class LidarPlugin: CAPPlugin, CAPBridgedPlugin, ScanDelegate {
     public let identifier = "LidarPlugin"
     public let jsName = "Lidar"
     public let pluginMethods: [CAPPluginMethod] = [
