@@ -10,3 +10,5 @@ export class LidarWeb extends WebPlugin implements LidarPlugin {
     throw new Error('Method not implemented.');
   }
 }
+const Lidar = new LidarWeb();
+export {Lidar};
