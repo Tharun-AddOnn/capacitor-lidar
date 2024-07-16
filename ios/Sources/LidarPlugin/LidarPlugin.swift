@@ -11,6 +11,15 @@ import UIKit
  */
 @objc(LidarPlugin)
 public class LidarPlugin: CAPPlugin, CAPBridgedPlugin, ScanDelegate {
+    func onDelegateCall(_ controller: RoomCaptureViewController, didFinishWithResult result: String) {
+        if let callbackId = scanCallbackId {
+             if let savedCall = self.bridge?.savedCall(withID: callbackId) {
+                savedCall.resolve([
+                    "result": result
+                ])
+            }
+        }
+    }
     public let identifier = "LidarPlugin"
     public let jsName = "Lidar"
     public let pluginMethods: [CAPPluginMethod] = [
@@ -39,6 +48,7 @@ public class LidarPlugin: CAPPlugin, CAPBridgedPlugin, ScanDelegate {
             self.roomCaptureViewController = RoomCaptureViewController()
             self.roomCaptureViewController?.scanPluginDelegate = self
             if let viewController = self.bridge?.viewController {
+                self.roomCaptureViewController?.modalPresentationStyle = .fullScreen
                 viewController.present(self.roomCaptureViewController!, animated: true, completion: {
                     call.resolve()
                 })
@@ -48,13 +58,5 @@ public class LidarPlugin: CAPPlugin, CAPBridgedPlugin, ScanDelegate {
         }
     }
 
-    func onDelegateCall(_ controller: RoomCaptureViewController, didFinishWithResult result: String) {
-        if let callbackId = scanCallbackId {
-             if let savedCall = self.bridge?.savedCall(withID: callbackId) {
-                savedCall.resolve([
-                    "result": result
-                ])
-            }
-        }
-    }
+    
 }
