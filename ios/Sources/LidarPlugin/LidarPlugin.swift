@@ -12,13 +12,7 @@ import UIKit
 @objc(LidarPlugin)
 public class LidarPlugin: CAPPlugin, CAPBridgedPlugin, ScanDelegate {
     func onDelegateCall(_ controller: RoomCaptureViewController, didFinishWithResult result: String) {
-        if let callbackId = scanCallbackId {
-             if let savedCall = self.bridge?.savedCall(withID: callbackId) {
-                savedCall.resolve([
-                    "result": result
-                ])
-            }
-        }
+        currentCall?.resolve(["result": result])
     }
     public let identifier = "LidarPlugin"
     public let jsName = "Lidar"
@@ -26,13 +20,14 @@ public class LidarPlugin: CAPPlugin, CAPBridgedPlugin, ScanDelegate {
         CAPPluginMethod(name: "isLiDARAvailable", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "startScan", returnType: CAPPluginReturnPromise)
     ]
-    private let implementation = Lidar()
+    //private let implementation = Lidar()
 
     private var roomCaptureViewController: RoomCaptureViewController?
     private var scanCallbackId: String?
-
+    private var currentCall : CAPPluginCall?
     public override func load() {
         self.scanCallbackId = nil
+        self.currentCall = nil
     }
   
     @objc func isLiDARAvailable(_ call: CAPPluginCall) {
@@ -44,19 +39,23 @@ public class LidarPlugin: CAPPlugin, CAPBridgedPlugin, ScanDelegate {
 
     @objc func startScan(_ call: CAPPluginCall) {
         scanCallbackId = call.callbackId
+        currentCall = call
         DispatchQueue.main.async {
-            self.roomCaptureViewController = RoomCaptureViewController()
-            self.roomCaptureViewController?.scanPluginDelegate = self
-            if let viewController = self.bridge?.viewController {
-                self.roomCaptureViewController?.modalPresentationStyle = .fullScreen
-                viewController.present(self.roomCaptureViewController!, animated: true, completion: {
-                    call.resolve()
-                })
+            if let rootViewController = self.bridge?.viewController {
+                let storyboard = UIStoryboard(name: "RoomCaptureViewController", bundle: Bundle(for: type(of: self)))
+                if let viewController = storyboard.instantiateViewController(withIdentifier: "RoomCaptureViewController") as? RoomCaptureViewController {
+                    viewController.scanPluginDelegate = self
+                    let customNavigationController = RoomCaptureViewNavigationController(rootViewController: viewController)
+                    customNavigationController.modalPresentationStyle = .fullScreen
+                    rootViewController.present(customNavigationController, animated: true, completion: {
+                        //call.resolve()
+                    })
+                } else {
+                    call.reject("Unable to instantiate RoomCaptureViewController from storyboard")
+                }
             } else {
-                call.reject("Unable to present RoomCaptureViewController")
+                call.reject("Unable to access root view controller")
             }
         }
     }
-
-    
 }
