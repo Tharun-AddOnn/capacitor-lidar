@@ -3,11 +3,11 @@ import PackageDescription
 
 let package = Package(
     name: "Lidar",
-    platforms: [.iOS(.v13)],
+    platforms: [.iOS(.v16)],
     products: [
         .library(
             name: "Lidar",
-            targets: ["LidarPlugin"])
+            targets: ["LidarPlugin","RoomCaptureViewController"])
     ],
     dependencies: [
         .package(url: "https://github.com/ionic-team/capacitor-swift-pm.git", branch: "main")
